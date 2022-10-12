@@ -1,0 +1,79 @@
+{% extends 'base.html' %} 
+
+{% block title %}
+    Vytvoření kategorie
+{% endblock %}
+{% block content %} 
+    
+<h1 align="center">Evidence vozidel</h1>
+<form method="POST">
+
+       <div class="form-group">
+        <label for="name">name</label>
+        <input type="text" id="name" name="name" class="form-control" placeholder="name"/>
+
+       </br>
+        <button class="btn btn-primary" type="submit">odeslat</button>
+    
+       </div>
+    </form>
+
+    <br>
+
+    <div class="row bg-primary text-white pb-2 pt-2 mb-2"  style="font-weight: 500;">
+      <div class="col">
+        Název kategorie
+      </div>
+      <div class="col">
+        funkce
+      </div>
+    </div>
+
+      {% for cat in isCategory %}
+    <div class="row">
+      <div class="col mb-2">
+      {{cat.name}}
+        
+      </div>
+
+      <div class="col">
+        <!-- start modal -->
+     <button class="btn" type="button" data-toggle="modal" data-target="#delete{{cat.id}}">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+        <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+      </svg>
+      </button>
+
+
+                  <div class="modal fade bd-example-modal-lg" id="delete{{cat.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLongTitle">Opravdu vymazat?</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Zavřít</button>
+                          <a href="/delete=table=category&item={{cat.id}}"> <button type="submit" class="btn btn-danger">Vymazat</button> </a>
+
+                      </div>
+                    </div>
+                  </div>
+                <!-- end modal -->
+          
+      </div>
+      
+    </div>
+    </div>
+
+
+    {% endfor %}
+  </div>
+
+
+
+{% endblock %}

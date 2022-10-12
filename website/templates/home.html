@@ -1,0 +1,230 @@
+{% extends 'base.html' %} {% block title %} Přehled {% endblock %}{% block content %}
+<h1 align="center">Přehled</h1>
+<h3>Přívěsné vozíky</h3>
+<!-- 
+Místo pro kategorie
+
+Kategorie 
+Vozidlo
+
+-->
+<div class="row card-group">
+ {% for trail in trailer %} {% if trail.type == "Přívěsný vozík" %}
+ <div class="col-4">
+  <div class="card card mb-2">
+   <div class="card-body">
+    <h5 class="card-title"></h5>
+    <div class="row">
+     <div class="col">
+      <p class="mb-0">Název</p>
+     </div>
+     <div class="col">
+      <p class="text mb-0">{{trail.name}}</p>
+     </div>
+    </div>
+    <hr />
+
+    <div class="row">
+     <div class="col">
+      <p class="mb-0">SPZ</p>
+     </div>
+     <div class="col">
+      <p class="text mb-0">{{trail.spz}}</p>
+     </div>
+    </div>
+    <hr />
+    <div class="row">
+     <div class="col">
+      <p class="mb-0">STK</p>
+     </div>
+     <div class="col">
+      {% if (trail.stk - date).days < 10 %}
+      <p class="text-danger mb-0">{% else %}</p>
+
+      <p class="text mb-0">{% endif %} {{trail.stk.strftime('%d. %m. %Y')}} | {{(trail.stk - date).days}} dnů</p>
+     </div>
+    </div>
+    <hr />
+    <div class="row">
+     <div class="col">
+      <p class="mb-0">Zelená karta</p>
+     </div>
+
+     <div class="col">
+      {% if (trail.zelkarta - date).days < 10 %}
+      <p class="text-danger mb-0">{% else %}</p>
+
+      <p class="text mb-0">{% endif %} {{trail.zelkarta.strftime('%d. %m. %Y')}} | {{(trail.zelkarta - date).days}} dnů</p>
+     </div>
+    </div>
+    <hr />
+    <div class="row">
+     <div class="col">
+      <p class="mb-0">Status</p>
+     </div>
+     <div class="col">
+      <p class="text mb-0">{{trail.status}}</p>
+     </div>
+    </div>
+
+    <hr />
+    <div class="row">
+     <div class="col">
+      <p class="mb-0">Popis</p>
+     </div>
+     <div class="col">
+      <p class="text mb-0">{{trail.note}}</p>
+     </div>
+    </div>
+   </div>
+  </div>
+ </div>
+ {% endif %} {% endfor %}
+</div>
+
+<h3>Osobní automobil</h3>
+<div class="row card-group">
+ {% for trail in trailer %} {% if trail.type == "Osobní automobil" %}
+ <div class="col-4">
+  <div class="card card mb-2">
+   <div class="card-body">
+    <h5 class="card-title"></h5>
+    <div class="row">
+     <div class="col">
+      <p class="mb-0">Název</p>
+     </div>
+     <div class="col">
+      <p class="text mb-0">{{trail.name}}</p>
+     </div>
+    </div>
+    <hr />
+    <div class="row">
+     <div class="col">
+      <p class="mb-0">SPZ</p>
+     </div>
+     <div class="col">
+      <p class="text mb-0">{{trail.spz}}</p>
+     </div>
+    </div>
+    <hr />
+    <div class="row">
+     <div class="col">
+      <p class="mb-0">STK</p>
+     </div>
+     <div class="col">
+      {% if (trail.stk - date).days < 10 %}
+      <p class="text-danger mb-0">{% else %}</p>
+
+      <p class="text mb-0">{% endif %} {{trail.stk.strftime('%d. %m. %Y')}} | {{(trail.stk - date).days}} dnů</p>
+     </div>
+    </div>
+    <hr />
+    <div class="row">
+     <div class="col">
+      <p class="mb-0">Zelená karta</p>
+     </div>
+
+     <div class="col">
+      {% if (trail.zelkarta - date).days < 10 %}
+      <p class="text-danger mb-0">{% else %}</p>
+
+      <p class="text mb-0">{% endif %} {{trail.zelkarta.strftime('%d. %m. %Y')}} | {{(trail.zelkarta - date).days}} dnů</p>
+     </div>
+    </div>
+    <hr />
+    <div class="row">
+     <div class="col">
+      <p class="mb-0">Status</p>
+     </div>
+     <div class="col">
+      <p class="text mb-0">{{trail.status}}</p>
+     </div>
+    </div>
+
+    <hr />
+    <div class="row">
+     <div class="col">
+      <p class="mb-0">Popis</p>
+     </div>
+     <div class="col">
+      <p class="text mb-0">{{trail.note}}</p>
+     </div>
+    </div>
+   </div>
+  </div>
+ </div>
+ {% endif %} {% endfor %}
+
+ <h3>Karavan</h3>
+ <div class="row card-group">
+  {% for trail in trailer %} {% if trail.type == "Karavan" %}
+  <div class="col-4">
+   <div class="card card mb-2">
+    <div class="card-body">
+     <h5 class="card-title"></h5>
+     <div class="row">
+      <div class="col">
+       <p class="mb-0">Název</p>
+      </div>
+      <div class="col">
+       <p class="text mb-0">{{trail.name}}</p>
+      </div>
+     </div>
+     <hr />
+     <div class="row">
+      <div class="col">
+       <p class="mb-0">SPZ</p>
+      </div>
+      <div class="col">
+       <p class="text mb-0">{{trail.spz}}</p>
+      </div>
+     </div>
+     <hr />
+     <div class="row">
+      <div class="col">
+       <p class="mb-0">STK</p>
+      </div>
+      <div class="col">
+       {% if (trail.stk - date).days < 10 %}
+       <p class="text-danger mb-0">{% else %}</p>
+
+       <p class="text mb-0">{% endif %} {{trail.stk.strftime('%d. %m. %Y')}} | {{(trail.stk - date).days}} dnů</p>
+      </div>
+     </div>
+     <hr />
+     <div class="row">
+      <div class="col">
+       <p class="mb-0">Zelená karta</p>
+      </div>
+
+      <div class="col">
+       {% if (trail.zelkarta - date).days < 10 %}
+       <p class="text-danger mb-0">{% else %}</p>
+
+       <p class="text mb-0">{% endif %} {{trail.zelkarta.strftime('%d. %m. %Y')}} | {{(trail.zelkarta - date).days}} dnů</p>
+      </div>
+     </div>
+     <hr />
+     <div class="row">
+      <div class="col">
+       <p class="mb-0">Status</p>
+      </div>
+      <div class="col">
+       <p class="text mb-0">{{trail.status}}</p>
+      </div>
+     </div>
+     <hr />
+     <div class="row">
+      <div class="col">
+       <p class="mb-0">Popis</p>
+      </div>
+      <div class="col">
+       <p class="text mb-0">{{trail.note}}</p>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+  {% endif %} {% endfor %} {% endblock %}
+ </div>
+</div>

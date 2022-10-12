@@ -1,0 +1,163 @@
+{% extends 'base.html' %} {% block content %}
+
+<div class="container py-5">
+ <div class="row">
+  <div class="col-lg-4">
+   <div class="card mb-4">
+    <div class="card-body text-center">
+     <img
+      src=""
+      alt=""
+      class="rounded-circle img-fluid"
+      style="width: 150px"
+     />
+    </div>
+   </div>
+  </div>
+  <div class="col-lg-8">
+   <div class="card mb-4">
+    <div class="card-body">
+     <div class="row">
+      <div class="col-sm-3">
+       <p class="mb-0">SPZ</p>
+      </div>
+      <div class="col-sm-9">
+       <p class="text-muted mb-0">{{spz}}</p>
+      </div>
+     </div>
+     <hr />
+     <div class="row">
+      <div class="col-sm-3">
+       <p class="mb-0">STK</p>
+      </div>
+      <div class="col-sm-9">
+       <p class="text-muted mb-0">{{stk}}</p>
+      </div>
+     </div>
+     <hr />
+     <div class="row">
+      <div class="col-sm-3">
+       <p class="mb-0">Zelená karta</p>
+      </div>
+      <div class="col-sm-9">
+       <p class="text-muted mb-0">{{zelkarta}}</p>
+      </div>
+     </div>
+     <hr />
+     <div class="row">
+      <div class="col-sm-3">
+       <p class="mb-0">Status</p>
+      </div>
+      <div class="col-sm-9">
+       <p class="text-muted mb-0">{% if status == False %} Volný {% else %} Obsazený {% endif %}</p>
+      </div>
+     </div>
+
+
+    </div>
+   </div>
+  </div>
+ </div>
+</div>
+
+<h1>Historie pujčení</h1>
+
+<div class="row bg-primary text-white pb-2 pt-2 mb-2" style="font-weight: 500">
+ <div class="col">Jméno a Příjmení</div>
+ <div class="col">Telefon</div>
+ <div class="col">Pujčený valník</div>
+ <div class="col">Půjčeno</div>
+ <div class="col">Vráceno</div>
+ <div class="col">Poznámka</div>
+ <div class="col">Funkce</div>
+</div>
+
+{% for history in pujceno %}
+
+
+<div class="row mb-2">
+ <div class="col">{{history.customer.firstname}} {{history.customer.lastname}}</div>
+ <div class="col">{{history.customer.phone}}</div>
+
+ <div class="col">
+{{history.trailer.spz}}</a>
+ </div>
+ <div class="col">{{history.date_created.strftime('%d. %m. %Y %H:%M')}}</div>
+
+ {% if history.date_back %}
+ <div class="col">{{history.date_back.strftime('%d. %m. %Y %H:%M')}}</div>
+
+ {% else %}
+ <div class="col">
+    
+ </div>
+
+ {% endif %}
+ <div class="col">
+    {% if history.note %}
+
+    {{history.note}}
+
+    {% else %}
+
+    
+    {% endif %}
+
+ </div>
+ <div class="col">
+   <a href="/pdf_generate/pujceno={{history.id}}/mail=False">
+      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-filetype-pdf" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M14 4.5V14a2 2 0 0 1-2 2h-1v-1h1a1 1 0 0 0 1-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5L14 4.5ZM1.6 11.85H0v3.999h.791v-1.342h.803c.287 0 .531-.057.732-.173.203-.117.358-.275.463-.474a1.42 1.42 0 0 0 .161-.677c0-.25-.053-.476-.158-.677a1.176 1.176 0 0 0-.46-.477c-.2-.12-.443-.179-.732-.179Zm.545 1.333a.795.795 0 0 1-.085.38.574.574 0 0 1-.238.241.794.794 0 0 1-.375.082H.788V12.48h.66c.218 0 .389.06.512.181.123.122.185.296.185.522Zm1.217-1.333v3.999h1.46c.401 0 .734-.08.998-.237a1.45 1.45 0 0 0 .595-.689c.13-.3.196-.662.196-1.084 0-.42-.065-.778-.196-1.075a1.426 1.426 0 0 0-.589-.68c-.264-.156-.599-.234-1.005-.234H3.362Zm.791.645h.563c.248 0 .45.05.609.152a.89.89 0 0 1 .354.454c.079.201.118.452.118.753a2.3 2.3 0 0 1-.068.592 1.14 1.14 0 0 1-.196.422.8.8 0 0 1-.334.252 1.298 1.298 0 0 1-.483.082h-.563v-2.707Zm3.743 1.763v1.591h-.79V11.85h2.548v.653H7.896v1.117h1.606v.638H7.896Z"/>
+      </svg>
+    </a>
+
+        <!-- start modal -->
+<a role="button" class="btn-primary" data-toggle="modal" data-target="#mail{{history.id}}">
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
+    <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z"/>
+  </svg>
+</a>
+
+
+              <div class="modal fade bd-example-modal-lg" id="mail{{history.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLongTitle">Odeslat emailem</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                    
+                      <div class="form-group">
+                        <div class="row">
+                          <div class="col-lg">
+
+                  <form method="POST" action="/pdf_generate/pujceno={{history.id}}/mail=True">
+                              <h1 align="center">Edit vozíku {{history.trailer.spz}}</h1>
+                                 <div class="form-group">
+
+                                  <h4>{{history.trailer.name}}</h4>
+                                  <h4>{{history.trailer.spz}}</h4>
+
+                                  <label for="email">Email</label>
+                                  <input type="text" id="email" name="email" class="form-control" value="{{history.customer.email}}" placeholder="Zadejte email"/>
+
+                                 </div>
+                      </div>
+                      </div>
+                       </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Zavřít</button>
+                      <button type="submit" class="btn btn-primary">Uložit</button>
+                    </div>
+                  </form>
+                  </div>
+                </div>
+              </div>
+            <!-- end modal -->
+</div>
+</div>
+{% endfor %} {% endblock %}

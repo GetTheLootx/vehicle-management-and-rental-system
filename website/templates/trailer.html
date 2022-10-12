@@ -1,0 +1,239 @@
+{% extends 'base.html' %} 
+
+{% block title %}
+    Evidence vozidel
+{% endblock %}
+{% block content %} 
+    
+<h1 align="center">Evidence vozidel</h1>
+
+<form method="POST">
+       <div class="form-group">
+        <label for="name">Název</label>
+        <input type="text" id="name" name="name" class="form-control" placeholder="Název"/>
+
+        <label for="spz">SPZ</label>
+        <input type="text" id="spz" name="spz" class="form-control" placeholder="SPZ"/>
+    
+        <label for="stk">STK</label>
+        <input type="datetime" id="stk" name="stk" class="form-control" placeholder="Datum STK"/>
+
+        <label for="zelkarta">Zelena karta</label>
+        <input type="datetime" id="zelkarta" name="zelkarta" class="form-control" placeholder="Zelená karta"/>
+
+        <label for="serialNumber">Výrobní číslo</label>
+        <input type="text" id="serialNumber" name="serialNumber" class="form-control" placeholder="Výrobní číslo"/>
+
+        <label for="price">Denní sazba</label>
+        <input type="text" id="price" name="price" class="form-control" value="0" placeholder="Denní sazba"/>
+
+        <label for="type">Typ vozidla</label><br>
+        <select class="form-select" id="type" name="type">
+                <option>Přívěsný vozík</option>
+                <option>Osobní automobil</option>
+                <option>Karavan</option>
+        </select>
+
+        <label for="note">Popis</label>
+<textarea type="text" id="note" name="note" class="form-control" rows="5" maxlength="200" placeholder="Popis vozidla">
+Rozměry: 
+Barva: 
+Majitel: 
+
+</textarea>
+
+           <br>                           
+
+        <button class="btn btn-primary" type="submit">odeslat</button>
+    
+       </div>
+    </form>
+
+    <br>
+    <div class="row bg-primary text-white pb-2 pt-2 mb-2"  style="font-weight: 500;">
+      <div class="col">
+        Název
+        </div>
+        <div class="col">
+        SPZ 
+        </div>
+        <div class="col">
+        STK 
+        </div>
+        <div class="col">
+        Zelená karta
+        </div>
+        <div class="col">
+        Stav
+      </div>
+      <div class="col">
+        Typ
+      </div>
+      <div class="col">
+        Cena
+      </div>
+      <div class="col">
+        Funkce
+      </div>
+
+    </div>
+    
+    {% if not trail %}
+    {% else %}
+      {% for trail in trail %}
+      <div class="row mb-2">
+        <div class="col">
+          {{trail.name}}
+          </div>
+        <div class="col">
+        {{trail.spz}}
+        </div>
+
+        {% if (trail.stk - date).days < 10 %}
+        <div class="col bg-danger">
+        {{trail.stk.strftime('%d. %m. %Y')}} |
+        {{(trail.stk - date).days}} dnů
+        </div>
+
+        {% else %}
+        <div class="col">
+          {{trail.stk.strftime('%d. %m. %Y')}} |
+          {{(trail.stk - date).days}} dnů
+          </div>
+        {% endif %}
+
+        {% if (trail.zelkarta - date).days < 10 %}
+        <div class="col bg-danger">
+        {{trail.zelkarta.strftime('%d. %m. %Y')}} |
+        {{(trail.zelkarta - date).days}} dnů
+        </div>
+
+        {% else %}
+        <div class="col">
+          {{trail.zelkarta.strftime('%d. %m. %Y')}} |
+          {{(trail.zelkarta - date).days}} dnů
+          </div>
+        {% endif %}
+
+
+        <div class="col">
+          {% if trail.status == false %}
+          Volno
+          {% else %}
+          Obsazeno
+          {% endif %}
+      </div>
+      <div class="col">
+        {{trail.type}}
+      </div>
+      <div class="col">
+        {{trail.price}} Kč
+      </div>
+      <div class="col">
+
+     <!-- start modal -->
+        <button class="btn" type="button" data-toggle="modal" data-target="#note{{trail.id}}">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+          </svg>
+          </button>
+
+
+                      <div class="modal fade bd-example-modal-lg" id="note{{trail.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="exampleModalLongTitle">Edit</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                            
+
+                              <div class="form-group">
+                                <div class="row">
+                                  <div class="col-lg">
+        
+                                    <form method="POST" action="/trail/edit%table=trailer%trailer_id={{trail.id}}%pujceno=none">
+                                      <h1 align="center">Edit vozíku {{trail.spz}}</h1>
+                                         <div class="form-group">
+                                          <label for="name">Název</label>
+                                          <input type="text" id="name" name="name" class="form-control" value="{{trail.name}}"/>
+
+                                
+                                          <label for="spz">SPZ</label>
+                                          <input type="text" id="spz" name="spz" class="form-control" value="{{trail.spz}}"/>
+                                      
+                                          <label for="stk">STK</label>
+                                          <input type="datetime" id="stk" name="stk" class="form-control" value="{{trail.stk.strftime('%d. %m. %Y %H:%M')}}"/>
+                                  
+                                          <label for="zelkarta">Zelena karta</label>
+                                          <input type="datetime" id="zelkarta" name="zelkarta" class="form-control" value="{{trail.zelkarta.strftime('%d. %m. %Y %H:%M')}}"/>
+
+                                          <label for="serialNumber">Výrobní číslo</label>
+                                          <input type="text" id="serialNumber" name="serialNumber" class="form-control" value="{{trail.serialNumber}}"/>
+                                  
+                                  
+                                          <label for="price">Cena</label>
+                                          <input type="text" id="price" name="price" class="form-control" value="{{trail.price}}"/>
+
+                                          <label for="note">Popis</label>
+                                          <textarea type="text"  id="note" name="note" rows="5" maxlength="300" class="form-control">{{trail.note}}</textarea>
+
+                                         </div>
+
+                              </div>
+                      
+                              </div>
+                               </div>
+              
+
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Zavřít</button>
+                              <button type="submit" class="btn btn-primary">Uložit</button>
+                            </div>
+                          </form>
+                          </div>
+                        </div>
+                      </div>
+                    <!-- end modal -->
+
+
+     <!-- start modal -->
+     <button class="btn" type="button" data-toggle="modal" data-target="#delete{{trail.id}}">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+        <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+      </svg>
+      </button>
+
+
+                  <div class="modal fade bd-example-modal-lg" id="delete{{trail.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLongTitle">Opravdu vymazat?</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Zavřít</button>
+                          <a href="/delete=table=trailer&item={{trail.id}}"> <button type="submit" class="btn btn-danger">Vymazat</button> </a>
+
+                      </div>
+                    </div>
+                  </div>
+                <!-- end modal -->
+
+      </div>
+    </div>
+  </div>
+
+
+{% endfor %}{% endif %}
+{% endblock %}

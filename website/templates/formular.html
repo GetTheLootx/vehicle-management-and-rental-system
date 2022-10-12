@@ -1,0 +1,472 @@
+{% extends 'base.html' %} 
+
+{% block title %}
+    Půjčovací formulář
+{% endblock %}
+{% block content %} 
+
+<h1 align="center">Pujčovací formulář</h1>
+    
+<form method="POST">
+       <div class="form-group">
+        <div class="row">
+          <div class="col-lg">
+        <label for="id_card">6 posledních číslic občanského průkazu</label>
+        <input type="text" maxlength="6" id="id_card" name="id_card" class="form-control" placeholder="6 posledních císlic občanského průkazu"/>
+
+        <label for="firstname">Jméno</label>
+        <input type="text" id="firstname" name="firstname" class="form-control" placeholder="Jméno"/>
+    
+        <label for="lastname">Příjmení</label>
+        <input type="text" id="lastname" name="lastname" class="form-control" placeholder="Příjmení"/>
+    
+        <label for="bydliste">Bydliště</label>
+        <input type="text" id="bydliste" name="bydliste" class="form-control" placeholder="Místo bydliště"/>
+
+        <label for="phone">Telefon</label>
+        <input type="text" maxlength="9" id="phone" name="phone" class="form-control" placeholder="Telefonní číslo"/>
+
+        <label for="trailer">Zvolte vozidlo</label>
+        <select class="form-select" id="trailer" name="trailer">
+            {% for trailer in trailers %}
+            {% if trailer.status == False and trailer.type == "Přívěsný vozík" %}
+                <option>{{trailer.spz}}</option>
+            {% else %}
+            {% endif %}
+            {% endfor %}
+        </select>
+        <br>
+
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value=1 id="gdpr" name="gdpr" checked>
+          <label class="form-check-label" for="gdpr">
+            Zákazník souhlasí se zpracováním GDPR podmínkami.
+          </label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value=1 id="contract" name="contract" checked>
+          <label class="form-check-label" for="contract">
+            Zákazník souhlasí s obchodními podmínkami.
+          </label>
+        </div>
+
+        <br>
+ 
+      </div>
+
+        <div class="col-lg">
+          <label for="startDate">Den půjčení</label>
+          <input type="datetime" id="startDate" name="startDate" class="form-control" value="{{datetime}}"/>
+
+          <label for="when_back">Kdy bude vráceno</label>
+          <input type="datetime" id="when_back" name="when_back" class="form-control" value="{{datetime}}"/>
+<!-- 
+          <label for="price">Sazba 24h</label>
+          <input type="text" id="price" name="price" class="form-control" value="250"/>
+-->
+          
+        </div>
+
+      </div>
+
+       </br> </br>
+        <button class="btn btn-primary" type="submit">odeslat</button>
+    
+       </div>
+    </form>
+    <br />
+    <hr color="black">
+    <div class="container">
+
+    <br/>
+
+    
+    <h3>Aktuálně půjčeno</h3>
+    <div class="row bg-primary text-white pb-2 pt-2 mb-2"  style="font-weight: 500;">
+      <div class="col">
+      Jméno a Příjmení
+      </div>
+      <div class="col">
+      Pujčený valník
+      </div>
+      <div class="col">
+      Půjčeno
+      </div>
+      <div class="col">
+      Má být vráceno
+    </div>
+    <div class="col">
+      Doba pujčení
+    </div>
+    <div class="col">
+      Celkem
+      <br>
+      (zaplatil | doplatek)
+    </div>
+    <div class="col-sm">
+      Funkce
+    </div>
+    </div>
+    {% for pujceno in pujceno %}
+    {% if not pujceno.date_back %}
+    <div class="row mb-2">
+      <div class="col">
+        <a href="/profile/customer/{{pujceno.customer.id}}"> {{pujceno.customer.firstname}} {{pujceno.customer.lastname}}  </a>
+      </div>
+
+      <div class="col">
+        <a href="/profile/trailer/{{pujceno.trailer.id}}">{{pujceno.trailer.spz}}</a> 
+      </div>
+      <div class="col">
+        {{pujceno.date_created.strftime('%d. %m. %Y %H:%M')}}
+      </div>
+      <div class="col">
+        {{pujceno.when_back.strftime('%d. %m. %Y %H:%M')}}
+      </div>
+      <div class="col">
+        {{date - pujceno.date_created}}
+
+      </div>
+      <div class="col">
+
+        {{pujceno.TotalPrice}},-
+        {% if ((date - pujceno.date_created).days) == 0 %}
+        ({{((( date - pujceno.date_created).days + 1) * pujceno.trailer.price)-pujceno.TotalPrice}}),-
+         {% else %}
+        ({{(((date - pujceno.date_created).days + 1 ) * pujceno.trailer.price)-pujceno.TotalPrice}}),-
+        {% endif %}
+      </div>
+      <div class="col-sm">
+
+        <a href="/pdf_generate/pujceno={{pujceno.id}}/mail=False">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-filetype-pdf" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M14 4.5V14a2 2 0 0 1-2 2h-1v-1h1a1 1 0 0 0 1-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5L14 4.5ZM1.6 11.85H0v3.999h.791v-1.342h.803c.287 0 .531-.057.732-.173.203-.117.358-.275.463-.474a1.42 1.42 0 0 0 .161-.677c0-.25-.053-.476-.158-.677a1.176 1.176 0 0 0-.46-.477c-.2-.12-.443-.179-.732-.179Zm.545 1.333a.795.795 0 0 1-.085.38.574.574 0 0 1-.238.241.794.794 0 0 1-.375.082H.788V12.48h.66c.218 0 .389.06.512.181.123.122.185.296.185.522Zm1.217-1.333v3.999h1.46c.401 0 .734-.08.998-.237a1.45 1.45 0 0 0 .595-.689c.13-.3.196-.662.196-1.084 0-.42-.065-.778-.196-1.075a1.426 1.426 0 0 0-.589-.68c-.264-.156-.599-.234-1.005-.234H3.362Zm.791.645h.563c.248 0 .45.05.609.152a.89.89 0 0 1 .354.454c.079.201.118.452.118.753a2.3 2.3 0 0 1-.068.592 1.14 1.14 0 0 1-.196.422.8.8 0 0 1-.334.252 1.298 1.298 0 0 1-.483.082h-.563v-2.707Zm3.743 1.763v1.591h-.79V11.85h2.548v.653H7.896v1.117h1.606v.638H7.896Z"/>
+          </svg>
+        </a>
+
+<!-- start modal -->
+<a role="button" class="btn-primary" data-toggle="modal" data-target="#mail{{pujceno.id}}">
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
+    <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z"/>
+  </svg>
+</a>
+
+
+              <div class="modal fade bd-example-modal-lg" id="mail{{pujceno.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLongTitle">Odeslat emailem</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                    
+                      <div class="form-group">
+                        <div class="row">
+                          <div class="col-lg">
+
+                  <form method="POST" action="/pdf_generate/pujceno={{pujceno.id}}/mail=True">
+                              <h1 align="center">Edit vozíku {{pujceno.trailer.spz}}</h1>
+                                 <div class="form-group">
+
+                                  <h4>{{pujceno.trailer.name}}</h4>
+                                  <h4>{{pujceno.trailer.spz}}</h4>
+
+                                  <label for="email">Email</label>
+                                  <input type="text" id="email" name="email" class="form-control" value="{{pujceno.customer.email}}" placeholder="Zadejte email"/>
+
+                                 </div>
+                      </div>
+                      </div>
+                       </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Zavřít</button>
+                      <button type="submit" class="btn btn-primary">Uložit</button>
+                    </div>
+                  </form>
+                  </div>
+                </div>
+              </div>
+            <!-- end modal -->
+
+
+     <!-- start modal  EDIT -->
+     <a role="button" class="btn-primary" data-toggle="modal" data-target="#edit{{pujceno.trailer.id}}">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+        <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+      </svg>
+    </a>
+
+
+                  <div class="modal fade bd-example-modal-lg" id="edit{{pujceno.trailer.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLongTitle">Edit</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                        
+                          <div class="form-group">
+                            <div class="row">
+                              <div class="col-lg">
+    
+                      <form method="POST" action="/trail/edit%table=pujceno%trailer_id={{pujceno.trailer.id}}%pujceno={{pujceno.id}}">
+                                  <h1 align="center">Edit vozíku {{pujceno.trailer.spz}}</h1>
+                                     <div class="form-group">
+
+                                      <h4>{{pujceno.trailer.name}}</h4>
+                                      <h4>{{pujceno.trailer.spz}}</h4>
+
+                                      <select class="form-select" id="trailer" name="trailer">
+                                        {% for trailer in trailers %}
+                                        {% if trailer.status == False and trailer.type == "Přívěsný vozík" %}
+                                            <option>{{trailer.spz}}</option>
+                                        {% else %}
+                                        {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                     </div>
+                          </div>
+                          </div>
+                           </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Zavřít</button>
+                          <button type="submit" class="btn btn-primary">Uložit</button>
+                        </div>
+                      </form>
+                      </div>
+                    </div>
+                  </div>
+                <!-- end modal -->
+
+
+
+      <a role="button" class="btn-primary" data-toggle="modal" data-target="#modal{{pujceno.trailer.id}}">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+          <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+        </svg>
+      </a>
+
+        <div class="modal fade bd-example-modal-lg" id="modal{{pujceno.trailer.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Předávací formulář na vozík {{pujceno.trailer.spz}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                
+                <h3>Aktuálně půjčeno</h3>
+                <!-- start modal -->
+                <div class="form-group">
+                  <div class="row">
+                    <div class="col-lg">
+                  <form method="POST" action="/get_back/trailer={{pujceno.trailer.id}}&&pujceno={{pujceno.id}}">
+                  <label for="date_back">Vráceno</label>
+                  <input type="datetime" id="date_back" name="date_back" class="form-control" value="{{datetime}}" />
+              
+                  <label for="note">Poznámka</label>
+                  <textarea id="note" name="note" class="form-control" placeholder="poznámka"></textarea>
+                </div>
+                </div>
+                </div>
+
+                 <!-- end modal -->
+
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Zavřít</button>
+                <button type="submit" class="btn btn-primary">Uložit</button>
+              </div>
+            </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+    {% endif %}   
+    {% endfor %}
+
+
+    <hr>
+    <h3>Historie půjčení</h3>
+    <div class="row bg-primary text-white pt-2 mb-2"  style="font-weight: 500;">
+      <div class="col">
+      Jméno a Příjmení
+      </div>
+      <div class="col">
+      Pujčený valník
+      </div>
+      <div class="col">
+      Půjčeno
+      </div>
+      <div class="col">
+      Vráceno
+    </div>
+    <div class="col">
+      Počet dnů
+    </div>
+    <div class="col">
+      Celkem
+      <br>
+      (zaplatil | doplatek)
+    </div>
+    <div class="col-sm">
+      Funkce
+    </div>
+    </div>
+    {% for pujceno in pujceno %}
+    {% if pujceno.date_back %}
+        <div class="row">
+          <div class="col">
+            <a href="/profile/customer/{{pujceno.customer.id}}"> {{pujceno.customer.firstname}} {{pujceno.customer.lastname}}  </a>
+          </div>
+
+
+          <div class="col">
+            <a href="/profile/trailer/{{pujceno.trailer.id}}">  {{pujceno.trailer.spz}} </a>
+          </div>
+          <div class="col">
+            {{pujceno.date_created.strftime('%d. %m. %Y %H:%M')}}
+          </div>
+
+          <div class="col">
+            {{pujceno.date_back.strftime('%d. %m. %Y %H:%M')}}
+          </div>
+          <div class="col">
+            {{pujceno.date_back - pujceno.date_created}}
+          </div>
+          <div class="col">
+
+            <!-- Pokud je čas pronájmu menší než 24 hodin (např. vozík je pronajatý 14h) skript to neeviduje ani jako jeden den, proto se musí přičíst jednička -->
+            {{pujceno.TotalPrice}},-
+            {% if ((pujceno.date_back - pujceno.date_created).days) == 0 %}
+            ({{((( pujceno.date_back - pujceno.date_created).days + 1) * pujceno.trailer.price)-pujceno.TotalPrice}}),-
+             {% else %}
+            ({{(((pujceno.date_back - pujceno.date_created).days + 1 ) * pujceno.trailer.price)-pujceno.TotalPrice}}),-
+            {% endif %}
+          </div>
+          <div class="col-sm">
+
+            <a href="/pdf_generate/pujceno={{pujceno.id}}/mail=False">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-filetype-pdf" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M14 4.5V14a2 2 0 0 1-2 2h-1v-1h1a1 1 0 0 0 1-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5L14 4.5ZM1.6 11.85H0v3.999h.791v-1.342h.803c.287 0 .531-.057.732-.173.203-.117.358-.275.463-.474a1.42 1.42 0 0 0 .161-.677c0-.25-.053-.476-.158-.677a1.176 1.176 0 0 0-.46-.477c-.2-.12-.443-.179-.732-.179Zm.545 1.333a.795.795 0 0 1-.085.38.574.574 0 0 1-.238.241.794.794 0 0 1-.375.082H.788V12.48h.66c.218 0 .389.06.512.181.123.122.185.296.185.522Zm1.217-1.333v3.999h1.46c.401 0 .734-.08.998-.237a1.45 1.45 0 0 0 .595-.689c.13-.3.196-.662.196-1.084 0-.42-.065-.778-.196-1.075a1.426 1.426 0 0 0-.589-.68c-.264-.156-.599-.234-1.005-.234H3.362Zm.791.645h.563c.248 0 .45.05.609.152a.89.89 0 0 1 .354.454c.079.201.118.452.118.753a2.3 2.3 0 0 1-.068.592 1.14 1.14 0 0 1-.196.422.8.8 0 0 1-.334.252 1.298 1.298 0 0 1-.483.082h-.563v-2.707Zm3.743 1.763v1.591h-.79V11.85h2.548v.653H7.896v1.117h1.606v.638H7.896Z"/>
+            </svg>
+
+<!-- start modal -->
+<a role="button" class="btn-primary" data-toggle="modal" data-target="#mail{{pujceno.id}}">
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
+    <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z"/>
+  </svg>
+</a>
+
+
+              <div class="modal fade bd-example-modal-lg" id="mail{{pujceno.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLongTitle">Odeslat emailem</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                    
+                      <div class="form-group">
+                        <div class="row">
+                          <div class="col-lg">
+
+                  <form method="POST" action="/pdf_generate/pujceno={{pujceno.id}}/mail=True">
+                              <h1 align="center">Edit vozíku {{pujceno.trailer.spz}}</h1>
+                                 <div class="form-group">
+
+                                  <h4>{{pujceno.trailer.name}}</h4>
+                                  <h4>{{pujceno.trailer.spz}}</h4>
+
+                                  <label for="email">Email</label>
+                                  <input type="text" id="email" name="email" class="form-control" value="{{pujceno.customer.email}}" placeholder="Zadejte email"/>
+
+                                 </div>
+                      </div>
+                      </div>
+                       </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Zavřít</button>
+                      <button type="submit" class="btn btn-primary">Uložit</button>
+                    </div>
+                  </form>
+                  </div>
+                </div>
+              </div>
+            <!-- end modal -->
+      
+
+            {% if pujceno.note %}
+            <button class="btn" type="button" data-toggle="modal" data-target="#note{{pujceno.id}}">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+                <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+              </svg>
+              </button>
+              
+
+              <!-- start modal -->
+              <div class="modal fade bd-example-modal-lg" id="note{{pujceno.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLongTitle">Poznámka</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      
+                      <h3>Vozík {{pujceno.trailer.spz}} ze dne {{pujceno.date_created.strftime('%d. %m. %Y %H:%M')}}</h3>
+                      <!-- start modal -->
+                      <div class="form-group">
+                        <div class="row">
+                          <div class="col-lg">
+
+                            <p>{{pujceno.note}}</p>
+
+                      </div>
+              
+                      </div>
+                       </div>
+      
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Zavřít</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <!-- end modal -->
+              {% else %}
+        
+            
+            {% endif %}
+
+          </div>
+        </div>
+        <br />
+        {% endif %}
+      {% endfor %}
+
+      </div>
+       
+
+{% endblock %}

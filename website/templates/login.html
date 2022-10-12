@@ -1,0 +1,21 @@
+{% extends 'base.html' %} {% block title %} Login {% endblock %} 
+
+{% block content %}
+
+
+<form method="POST">
+<h1 align="center">Login page</h1>
+   <div class="form-group">
+
+    <label for="name">Jméno a příjmení</label>
+    <input type="text" id="name" name="name" class="form-control" placeholder="Vaše přihlašovací jméno"/>
+
+    <label for="password">Heslo</label>
+    <input type="password" id="password" name="password" class="form-control" placeholder="Zadejte heslo"/>
+   </br>
+    <button class="btn btn-primary" type="submit">Přihlásit</button>
+
+
+   </div>
+</form>
+{% endblock %}
