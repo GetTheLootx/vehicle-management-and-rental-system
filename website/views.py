@@ -139,8 +139,6 @@ def formular():
                 return redirect(url_for('views.formular'))
 
             else:
-                customerId = isCustomer.id
-                trailerId = isTrailer.id
                 if not isCustomer:
                     data = customer(id_card=id_card, firstname=firstname, lastname=lastname,
                                     bydliste=bydliste, phone=phone, gdpr=gdpr, contract=contract)
@@ -160,6 +158,8 @@ def formular():
                     return redirect(url_for('views.formular'))
 
                 else:
+                    customerId = isCustomer.id
+                    trailerId = isTrailer.id
                     if phone != isCustomer.phone and len(phone) > 1:
                         isCustomer.phone = phone
                         db.session.commit()
