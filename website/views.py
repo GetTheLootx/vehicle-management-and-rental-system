@@ -139,11 +139,16 @@ def formular():
                 return redirect(url_for('views.formular'))
 
             else:
+                trailerId = isTrailer.id
                 if not isCustomer:
                     data = customer(id_card=id_card, firstname=firstname, lastname=lastname,
                                     bydliste=bydliste, phone=phone, gdpr=gdpr, contract=contract)
                     db.session.add(data)
                     db.session.commit()
+
+                    isCustomer = customer.query.filter_by(
+                        id_card=id_card).first()
+                    customerId = isCustomer.id
 
                     data = pujceno(customer_id=customerId,
                                    trailer_id=trailerId, date_created=dateStart, when_back=when_back, TotalPrice=TotalPrice)
@@ -158,8 +163,6 @@ def formular():
                     return redirect(url_for('views.formular'))
 
                 else:
-                    customerId = isCustomer.id
-                    trailerId = isTrailer.id
                     if phone != isCustomer.phone and len(phone) > 1:
                         isCustomer.phone = phone
                         db.session.commit()
