@@ -2,11 +2,170 @@
 <html lang="en">
  <head>
   <meta charset="UTF-8" />
+  <meta name="pdfkit-page-size" content="Legal" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PDF</title>
+  <link
+   href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
+   rel="stylesheet"
+   integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx"
+   crossorigin="anonymous"
+  />
+  <script
+   src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
+   integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
+   crossorigin="anonymous"
+  ></script>
+
+  <title>Smlouva</title>
  </head>
  <body>
-  <h1>This is PDF generator</h1>
+  <div class="container" style="font-size: 22px">
+   <h2 class="text-center">Přívěs nákladní valníkový SPZ <span class="fw-bolder"> {{spz}}</span></h2>
+   <div style="float: left; width: 900px; border-bottom-style: solid; border-bottom-width: 1px; margin: 20px"></div>
+   <div class="container-fluid">
+    <div style="float: left; width: 450px; margin-left: 80px">
+     Pronajímatel <br />
+     Rejsat-Eva Rejchlíková <br />
+     Revoluční 292<br />
+     50401, Nový Bydžov
+     <br />
+    </div>
+    <div style="float: left; width: 360px">
+     <strong>Nájemce:</strong> <br />
+     <strong>Jméno a příjmení:</strong> {{firstname+" "+ lastname}} <br />
+     <strong>Bydliště:</strong> {{bydliste}}<br />
+     <strong>Zastoupen :</strong> <br />
+     <strong>IČO:</strong> <br />
+     <strong>Občanský průkaz:</strong> {{id_card}}<br />
+     <strong>Tel.:</strong> {{phone}}<br />
+    </div>
+   </div>
+   <br />
+   <div style="float: left; width: 900px; border-bottom-style: solid; border-bottom-width: 1px; margin: 20px"></div>
+
+   <div class="container">
+    <div style="float: left; width: 450px; margin-left: 80px">
+     <h2>Záznam o přívěsu</h2>
+    </div>
+    <div style="float: left; width: 450px; margin-left: 80px">
+     <strong>Typ přívěsu: </strong>{{type}}<br />
+     <strong>Výrobní číslo: </strong>{{serialNumber}}<br />
+     <strong>Technický průkaz:</strong><br />
+     <strong>Ostatní:</strong><br />
+    </div>
+    <div style="float: left; width: 360px">
+     <strong>Pneu %: </strong>90%<br />
+     <strong>El.Instalace:</strong> v pořádku <br />
+     <strong>Korba:</strong> valníková<br />
+    </div>
+   </div>
+   <div style="float: left; width: 900px; margin-bottom: 25px"></div>
+
+   <div class="container-fluid">
+    <div style="float: left; width: 450px; margin-left: 80px">
+     <strong>Výpočet ceny nájemce:</strong><br />
+     <strong>Den půjčení:</strong> {{date_created.strftime('%d. %m. %Y %H:%M')}}<br />
+     <strong>Očekávaný den vrácení:</strong> {{when_back.strftime('%d. %m. %Y %H:%M')}}<br />
+     <strong>Vratná kauce stanovena na…………………...Kč.</strong><br />
+    </div>
+    <div style="float: left; width: 360px">
+     <strong>Sazba za 1den </strong> {{price}} Kč.<br />
+     <strong>Celkem </strong> {{TotalPrice}}Kč.<br />
+    </div>
+
+    <div style="float: left; margin-top: 20px; padding-left: 80px">
+     Nedílnou součástí této smlouvy jsou podmínky půjčovního řádu o pronájmu přívěsu, uvedené na zadní straně tohoto formuláře.Strany svými níže
+     uvedenými podpisy vyjadřují souhlas s celým obsahem této smlouvy.Nájemce stvrzuje svým podpisem souhlas k okopírování OP.
+    </div>
+   </div>
+   <div style="float: left; width: 900px; margin-bottom: 25px"></div>
+
+   <div class="container">
+    <div style="float: left; width: 450px; margin-left: 80px">
+     <h3>NÁJEMCE PŘEVZAL PŘÍVĚS</h3>
+    </div>
+    <div style="float: left; width: 450px; margin-left: 80px">
+     Půjčeno
+     <br />
+     V Novém Bydžově <br />
+     dne {{date_created.strftime('%d. %m. %Y %H:%M')}}
+     <br />
+     <br />
+     <br />
+     Podpis nájemce………………………
+     <br />
+     <br />
+     <br />
+     Rejsat-Eva Rejchlíková
+     <br />
+     Podpis pronajímatele
+    </div>
+    <div style="float: left; width: 360px">
+     Vráceno
+     <br />
+     V Novém Bydžově <br />
+     dne {% if date_back %} {{date_back.strftime('%d. %m. %Y %H:%M')}} {% endif %}
+
+     <br />
+     <br />
+     <br />
+     Podpis nájemce………………………
+     <br />
+     <br />
+     <br />
+     Rejsat-Eva Rejchlíková
+     <br />
+     Podpis pronajímatele…………………
+    </div>
+   </div>
+  </div>
+
+  <div style="float: left; height: 650px; width: 900px; margin: 20px"></div>
+
+  <div style="float: left; width: 900px; padding-left: 60px; font-size: 19px">
+   <p style="margin: auto">Půjčovní Řád Rejsat – Eva Rejchlíková , Revoluční 292, Nový Bydžov , 50401</p>
+   <br />
+   <p>
+    1. Pronajímatel předává nájemci pronajatou věc ve stavu způsobilém k řádnému užívání. Pronájem dopravního prostředku podle této smlouvy se řídí §
+    663 Občanského zákoníku v platném znění.
+   </p>
+   <br /><br />
+   <p>
+    2. Nájemce je povinen chránit pronajatý dopravní prostředek před poškozením nebo ztrátou, přívěs nepřetěžovat a řídit se návodem k obsluze.
+    <br /><br />
+   </p>
+   <p>
+    3. Nájemce se zavazuje, že nepřenechá pronajatou věc k užívání jiné osobě. 4. Nájemce je povinen hlásit vážnější poškození nebo ztrátu neprodleně
+    pronajímateli. <br /><br />
+   </p>
+
+   <p>
+    5. Poplatek z prodlení vrácení půjčeného dopravního prostředku jinak,než bylo dohodnuto ve smlouvě,činí první den 50% a následující dny 100%
+    půjčovného. <br /><br />
+   </p>
+
+   <p>6. Nájemce prohlašuje,že má dostatečné zkušenosti a potřebnou kvalifikaci pro řízení pronajatého dopravního prostředku. <br /><br /></p>
+   <p>
+    7. Nájemce se zavazuje neprodleně uhradit pronajímateli škodu, kterou způsobí na půjčeném přívěsu i v případě zavinění škody jinou osobou. V
+    případě odcizení nebo zničení přívěsu se nájemce zavazuje uhradit 90% ceny nového přívěsu dle současných ceníkových cen. <br /><br />
+   </p>
+   <p>
+    8. Pronajímatel potvrzuje řádné vrácení dopravního prostředku svým podpisem a razítkem. Bez tohoto potvrzení je vrácení neplatné. <br /><br />
+   </p>
+   <p>
+    9. Nájemce se zavazuje v případě , že přívěs nebude vrácen včas, či v řádném stavu, či nebude potvrzeno pronajímatelem jeho řádné vrácení zaplatit
+    smluvní pokutu ve výši 400,- Kč za každý den , a to do řádného vrácení přívěsu (§ 544 obč. zákoníku). <br /><br />
+   </p>
+   <p>
+    10. Nájemce potvrzuje, že byl ve smyslu § 617 Občanského zákoníku seznámen se zacházením s dopravním prostředkem, přečetl si a souhlasí s
+    půjčovním řádem a zavazuje se ho dodržovat. <br /><br />
+   </p>
+   <p>
+    11. V případě, že nájemce uvede ve smlouvě o pronájmu dopravního prostředku nesprávné údaje, zodpovídá se za vzniklé škody, které mají souvislost
+    s těmito nesprávnými údaji. Zákazník potvrzuje, že byl ve smyslu § 617 Občanského zákoníku řádně seznámen se zacházením s dopravním
+    prostředkem,přečetl si a souhlasí s půjčovním řádem a zavazuje se ho dodržovat
+   </p>
+  </div>
  </body>
 </html>

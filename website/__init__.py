@@ -13,13 +13,13 @@ DB_NAME = "database.db"
 
 def create_app():
     app = Flask(__name__)
-    app.config['SECRET_KEY'] = "yvw)!cpaqx43c)iry+u6uw+#34w9tvhwq44qds-m1m^(vp&co#"
+    app.config['SECRET_KEY'] = "=+@02(+993nyoog&o1mcsv5m46!&rq!2l%i8)7u+r09nt8_6"
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
 
-    app.config['MAIL_SERVER'] = ''
+    app.config['MAIL_SERVER'] = 'smtp.seznam.cz'
     app.config['MAIL_PORT'] = 465
-    app.config['MAIL_USERNAME'] = ''
-    app.config['MAIL_PASSWORD'] = ''
+    app.config['MAIL_USERNAME'] = 'nakouli@seznam.cz'
+    app.config['MAIL_PASSWORD'] = 'Revolucni292'
     app.config['MAIL_USE_SSL'] = True
 
     db.init_app(app)

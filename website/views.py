@@ -139,7 +139,6 @@ def formular():
                 return redirect(url_for('views.formular'))
 
             else:
-                trailerId = isTrailer.id
                 if not isCustomer:
                     data = customer(id_card=id_card, firstname=firstname, lastname=lastname,
                                     bydliste=bydliste, phone=phone, gdpr=gdpr, contract=contract)
@@ -148,7 +147,10 @@ def formular():
 
                     isCustomer = customer.query.filter_by(
                         id_card=id_card).first()
+                    isTrailer = trailer.query.filter_by(spz=vehicle).first()
+
                     customerId = isCustomer.id
+                    trailerId = isTrailer.id
 
                     data = pujceno(customer_id=customerId,
                                    trailer_id=trailerId, date_created=dateStart, when_back=when_back, TotalPrice=TotalPrice)
@@ -221,7 +223,7 @@ def formular():
 @ login_required
 def add_trailer():
     if current_user.name == "admin":
-        isTrailer = trailer.query.order_by(trailer.type.desc()).all()
+        isTrailer = trailer.query.all()
         if request.method == 'POST':
             name = request.form.get("name")
             spz = request.form.get("spz")
@@ -325,13 +327,14 @@ def get_back(trailer_id, pujceno_id):
         db.session.commit()
 
         flash('Úspěšně vráceno', category="success")
-        return redirect(url_for('views.formular'))
+    return redirect(url_for('views.formular'))
 
 
 @views.route("/trail/edit%table=<table>%trailer_id=<trailer_id>%pujceno=<pujceno_id>", methods=['POST', 'GET'])
 @login_required
 def edit(table, trailer_id, pujceno_id):
     if request.method == 'POST':
+
         if table == "trailer":
             name = request.form.get("name")
             spz = request.form.get("spz")
@@ -422,8 +425,10 @@ def pdf_contract(pujceno_id, mail_status):
     html = render_template("pdf_contract.html", user=current_user, firstname=firstname,
                            lastname=lastname, spz=spz, phone=phone, price=price, id_card=id_card, bydliste=bydliste, date_created=date_created,
                            when_back=when_back, date_back=date_back, total_time=total_time, total_days=total_days, type=type, serialNumber=serialNumber, TotalPrice=TotalPrice)
+    wkhtml_path = pdfkit.configuration(
+        wkhtmltopdf="C:/Program Files (x86)/wkhtmltopdf/bin/wkhtmltopdf.exe")
 
-    pdf = pdfkit.from_string(html)
+    pdf = pdfkit.from_string(html, configuration=wkhtml_path)
     response = make_response(pdf)
     response.headers["Content-Type"] = "application/pdf"
     response.headers["Content-Disposition"] = "inline; filename=output.pdf"
