@@ -3,4 +3,4 @@ This linux app stores information about your vehicles and checks for the validal
 ![Screenshot 2022-10-12 195313](https://user-images.githubusercontent.com/93148434/195414162-4f2a74e6-5adc-4530-adab-3d593425499b.png)
 
 
-You can install requirements by simply typing 'pip freeze > requirements.txt'
+You can install requirements by simply typing 'pip install -r requirements.txt'
